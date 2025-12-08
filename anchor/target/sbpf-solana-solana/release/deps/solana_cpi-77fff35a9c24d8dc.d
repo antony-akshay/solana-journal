@@ -1,0 +1,8 @@
+/home/noah/projects/solana_projects/solana-journal/anchor/target/sbpf-solana-solana/release/deps/libsolana_cpi-77fff35a9c24d8dc.rmeta: /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/lib.rs /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/syscalls.rs
+
+/home/noah/projects/solana_projects/solana-journal/anchor/target/sbpf-solana-solana/release/deps/libsolana_cpi-77fff35a9c24d8dc.rlib: /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/lib.rs /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/syscalls.rs
+
+/home/noah/projects/solana_projects/solana-journal/anchor/target/sbpf-solana-solana/release/deps/solana_cpi-77fff35a9c24d8dc.d: /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/lib.rs /home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/syscalls.rs
+
+/home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/lib.rs:
+/home/noah/.cargo/registry/src/index.crates.io-6f17d22bba15001f/solana-cpi-2.2.1/src/syscalls.rs:
