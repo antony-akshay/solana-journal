@@ -9,12 +9,13 @@ pub const ENTRY: &[u8] = b"ENTRY_STATE";
 pub mod basic {
     use super::*;
     pub fn createEntry(ctx:Context<CreateEvent>,title:String,content:String,timestamp:i64,image_url:String) ->Result<()> {
-        *ctx.accounts.journal_account = JournalEntry { 
-            title: title, 
-            content: content, 
-            timestamp: timestamp, 
-            image_url: image_url ,
-        };
+        *ctx.accounts.journal_account = JournalEntry {
+            title:title,
+            content:content,
+            timestamp:timestamp,
+            image_url:image_url, 
+            user:ctx.accounts.signer.key()
+         };
         Ok(())
     }
 
@@ -43,7 +44,7 @@ pub struct CreateEvent<'info> {
         seeds = [
             ENTRY,
             title.as_ref(),
-            signer.key().as_ref()
+            signer.key().as_ref(),
         ],
         bump
     )]
@@ -103,4 +104,5 @@ pub struct JournalEntry {
     pub timestamp: i64,
     #[max_len(24)]
     pub image_url: String,
+    pub user:Pubkey
 }

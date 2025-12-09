@@ -249,6 +249,10 @@ export type Basic = {
           {
             "name": "imageUrl",
             "type": "string"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
           }
         ]
       }

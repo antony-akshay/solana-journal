@@ -4,7 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { ExplorerLink } from '../cluster/cluster-ui'
 import { WalletButton } from '../solana/solana-provider'
 import { useBasicProgram } from './basic-data-access'
-import { BasicCreate, BasicProgram } from './basic-ui'
+import { BasicCreate } from './basic-ui'
 import { AppHero } from '../app-hero'
 import { ellipsify } from '@/lib/utils'
 
@@ -20,7 +20,6 @@ export default function BasicFeature() {
         </p>
         <BasicCreate />
       </AppHero>
-      <BasicProgram />
     </div>
   ) : (
     <div className="max-w-4xl mx-auto">

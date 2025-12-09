@@ -4,31 +4,49 @@ import { useBasicProgram } from './basic-data-access'
 import { Button } from '@/components/ui/button'
 
 export function BasicCreate() {
-  const { greet } = useBasicProgram()
 
-  return (
-    <Button onClick={() => greet.mutateAsync()} disabled={greet.isPending}>
-      Run program{greet.isPending && '...'}
-    </Button>
+  const {getJournalAccounts} = useBasicProgram()
+
+  if(getJournalAccounts.isLoading) return (
+    <div>loading....</div>
   )
-}
 
-export function BasicProgram() {
-  const { getProgramAccount } = useBasicProgram()
+  if(getJournalAccounts.error) return (
+    <div>some error occured</div>
+  )
 
-  if (getProgramAccount.isLoading) {
-    return <span className="loading loading-spinner loading-lg"></span>
-  }
-  if (!getProgramAccount.data?.value) {
-    return (
-      <div className="alert alert-info flex justify-center">
-        <span>Program account not found. Make sure you have deployed the program and are on the correct cluster.</span>
-      </div>
-    )
-  }
+  const entries = getJournalAccounts.data ?? []
+
   return (
-    <div className={'space-y-6'}>
-      <pre>{JSON.stringify(getProgramAccount.data.value, null, 2)}</pre>
+    //  <div className="space-y-4">
+    //   <h1 className="text-xl font-bold">Your Journal Entries</h1>
+
+    //   {entries.length === 0 && (
+    //     <div>No entries found.</div>
+    //   )}
+
+    //   <ul className="space-y-3">
+    //     {entries.map((entry) => (
+    //       <li
+    //         key={entry.publicKey.toBase58()}
+    //         className="border p-4 rounded-lg shadow"
+    //       >
+    //         <h2 className="font-semibold text-lg">{entry.account.title}</h2>
+    //         <p className="text-sm">{entry.account.content}</p>
+
+    //         <span className="text-xs opacity-70">
+    //           {/* {new Date(entry.account.timestamp * 1000).toLocaleString()} */}
+    //         </span>
+    //       </li>
+    //     ))}
+    //   </ul>
+    // </div>
+    <>
+    <div className='border rounded-4xl w-200 h-150 border-4 border-white'>
+      <div>
+        <input type="text" />
+      </div>
     </div>
+    </>
   )
 }

@@ -243,6 +243,10 @@
           {
             "name": "image_url",
             "type": "string"
+          },
+          {
+            "name": "user",
+            "type": "pubkey"
           }
         ]
       }

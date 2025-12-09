@@ -1,8 +1,8 @@
 'use client'
 
 import { getBasicProgram, getBasicProgramId } from '@project/anchor'
-import { useConnection } from '@solana/wallet-adapter-react'
-import { Cluster } from '@solana/web3.js'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { Cluster, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
 import { useCluster } from '../cluster/cluster-data-access'
@@ -17,27 +17,39 @@ export function useBasicProgram() {
   const provider = useAnchorProvider()
   const programId = useMemo(() => getBasicProgramId(cluster.network as Cluster), [cluster])
   const program = useMemo(() => getBasicProgram(provider, programId), [provider, programId])
+  const { publicKey } = useWallet();
 
   const getProgramAccount = useQuery({
     queryKey: ['get-program-account', { cluster }],
     queryFn: () => connection.getParsedAccountInfo(programId),
   })
 
-  const greet = useMutation({
-    mutationKey: ['basic', 'greet', { cluster }],
-    mutationFn: () => program.methods.greet().rpc(),
-    onSuccess: (signature) => {
-      transactionToast(signature)
-    },
-    onError: () => {
-      toast.error('Failed to run program')
-    },
+  const getJournalAccounts = useQuery({
+    queryKey: ['journal', { cluster, wallet: publicKey }],
+    queryFn: async () => {
+      if (!publicKey) return;
+      const all = await program.account.journalEntry.all();
+
+      return all.filter(acc => {
+        const title = acc.account.title
+        const [pda] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("ENTRY"),
+            Buffer.from(title),
+            publicKey.toBuffer()
+          ],
+          programId
+        )
+
+        return acc.publicKey.equals(pda)
+      })
+    }
   })
 
   return {
     program,
     programId,
     getProgramAccount,
-    greet,
+    getJournalAccounts
   }
 }
