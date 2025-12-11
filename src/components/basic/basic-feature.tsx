@@ -7,19 +7,79 @@ import { useBasicProgram } from './basic-data-access'
 import { BasicCreate } from './basic-ui'
 import { AppHero } from '../app-hero'
 import { ellipsify } from '@/lib/utils'
+import { ChangeEvent, useState } from 'react'
+import Upload from './upload'
+
+interface EntryFormData {
+  title: string,
+  entry: string,
+  image_url: string
+}
 
 export default function BasicFeature() {
   const { publicKey } = useWallet()
   const { programId } = useBasicProgram()
 
+  const [Url,setUrl]=useState('');
+
+  const [formData, setFormData] = useState<EntryFormData>({
+    title: '',
+    entry: '',
+    image_url: ''
+  })
+
+  const handleInputChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }))
+  }
+
+  const handleCancel = () => {
+    setFormData({
+      title: '',
+      entry: '',
+      image_url: ''
+    })
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!publicKey) return;
+
+    console.log(formData.entry, formData.title);
+  }
+
   return publicKey ? (
     <div>
-      <AppHero title="Basic" subtitle={'Run the program by clicking the "Run program" button.'}>
-        <p className="mb-6">
-          <ExplorerLink path={`account/${programId}`} label={ellipsify(programId.toString())} />
-        </p>
-        <BasicCreate />
-      </AppHero>
+      <form className='flex flex-col items-center my-5'>
+        <input
+          type="text"
+          placeholder='title'
+          name='title'
+          value={formData.title}
+          onChange={handleInputChange}
+          className='bg-white text-black p-4'
+        />
+        <input
+          type="text"
+          placeholder='entry'
+          name='entry'
+          value={formData.entry}
+          onChange={handleInputChange}
+          className='bg-white text-black p-4 mt-1 h-20'
+        />
+        <Upload onUploadComplete={(uploadedurl) => setUrl(uploadedurl)}/>
+        <button
+          onClick={handleSubmit}
+          className='border p-4 rounded-3xl mt-10'
+        >
+          click me!
+        </button>
+      </form>
     </div>
   ) : (
     <div className="max-w-4xl mx-auto">
