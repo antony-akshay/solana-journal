@@ -8,7 +8,15 @@ import { useMemo } from 'react'
 import { useCluster } from '../cluster/cluster-data-access'
 import { useAnchorProvider } from '../solana/solana-provider'
 import { useTransactionToast } from '../use-transaction-toast'
+import * as anchor from "@coral-xyz/anchor"
 import { toast } from 'sonner'
+import { program } from '@coral-xyz/anchor/dist/cjs/native/system'
+
+interface createEntryArgs {
+  title: string,
+  entry: string,
+  imageUrl: string
+}
 
 export function useBasicProgram() {
   const { connection } = useConnection()
@@ -46,10 +54,34 @@ export function useBasicProgram() {
     }
   })
 
+  const createEntry = useMutation<string, Error, createEntryArgs>({
+    mutationKey: ['create', 'entry', { cluster }],
+    mutationFn: ({ title, entry, imageUrl }) => (
+      program.methods.createEntry(
+        title,
+        entry,
+        new anchor.BN(Math.floor(
+          new Date(Date.now()).getTime() / 1000
+        )),
+        imageUrl
+      ).accounts({}).rpc()
+    ),
+
+    onError: (err) => {
+      toast.error(err.toString());
+    },
+    onSuccess: async (signature) => {
+      transactionToast(signature)
+      await getJournalAccounts.refetch()
+    },
+  })
+
+
   return {
     program,
     programId,
     getProgramAccount,
-    getJournalAccounts
+    getJournalAccounts,
+    createEntry
   }
 }

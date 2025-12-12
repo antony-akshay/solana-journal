@@ -18,9 +18,9 @@ interface EntryFormData {
 
 export default function BasicFeature() {
   const { publicKey } = useWallet()
-  const { programId } = useBasicProgram()
+  const { programId ,createEntry} = useBasicProgram()
 
-  const [Url,setUrl]=useState('');
+  const [Url, setUrl] = useState('');
 
   const [formData, setFormData] = useState<EntryFormData>({
     title: '',
@@ -49,6 +49,16 @@ export default function BasicFeature() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!publicKey) return;
+    const time = Math.floor(
+      new Date(Date.now()).getTime() / 1000
+    )
+
+    createEntry.mutateAsync({
+      title:formData.title,
+      entry:formData.entry,
+      imageUrl:"",
+    })
+    
 
     console.log(formData.entry, formData.title);
   }
@@ -72,10 +82,11 @@ export default function BasicFeature() {
           onChange={handleInputChange}
           className='bg-white text-black p-4 mt-1 h-20'
         />
-        <Upload onUploadComplete={(uploadedurl) => setUrl(uploadedurl)}/>
+        <Upload onUploadComplete={(uploadedurl) => setUrl(uploadedurl)} />
         <button
           onClick={handleSubmit}
           className='border p-4 rounded-3xl mt-10'
+          disabled={createEntry.isPending}
         >
           click me!
         </button>
