@@ -19,14 +19,14 @@ pub mod basic {
         Ok(())
     }
 
-    pub fn edit_event(ctx:Context<EditEvent>,content:String,timestamp:i64) ->Result<()> {
+    pub fn editEntry(ctx:Context<EditEntry>,content:String,timestamp:i64) ->Result<()> {
         let journal_entry = &mut ctx.accounts.journal_account;
         journal_entry.content = content;
         journal_entry.timestamp=timestamp;
         Ok(())
     }
 
-    pub fn close_event(ctx:Context<CloseEvent>)->Result<()> {
+    pub fn closeEntry(ctx:Context<CloseEntry>)->Result<()> {
         Ok(())
     }
 }
@@ -56,7 +56,7 @@ pub struct CreateEvent<'info> {
 
 #[derive(Accounts)]
 #[instruction(title:String)]
-pub struct EditEvent<'info>{
+pub struct EditEntry<'info>{
     #[account(mut)]
     pub signer:Signer<'info>,
 
@@ -75,7 +75,7 @@ pub struct EditEvent<'info>{
 }
 #[derive(Accounts)]
 #[instruction(title:String)]
-pub struct CloseEvent<'info>{
+pub struct CloseEntry<'info>{
     #[account(mut)]
     pub signer:Signer<'info>,
 

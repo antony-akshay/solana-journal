@@ -17,5 +17,13 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
-  }
+  },
+  "include": [
+    "tests/**/*.ts",
+    "programs/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "target"
+  ]
 }

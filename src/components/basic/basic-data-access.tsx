@@ -42,7 +42,7 @@ export function useBasicProgram() {
         const title = acc.account.title
         const [pda] = PublicKey.findProgramAddressSync(
           [
-            Buffer.from("ENTRY"),
+            Buffer.from("ENTRY_STATE"),
             Buffer.from(title),
             publicKey.toBuffer()
           ],
@@ -56,25 +56,28 @@ export function useBasicProgram() {
 
   const createEntry = useMutation<string, Error, createEntryArgs>({
     mutationKey: ['create', 'entry', { cluster }],
-    mutationFn: ({ title, entry, imageUrl, entry_account }) => (
-      program.methods.createEntry(
+    mutationFn: async ({ title, entry, imageUrl, entry_account }) =>
+      await program.methods.createEntry(
         title,
         entry,
-        new anchor.BN(Math.floor(
-          new Date(Date.now()).getTime() / 1000
-        )),
+        new anchor.BN(Math.floor(Date.now() / 1000)),
         imageUrl
-      ).accounts({
-        journalAccount: entry_account
-      }).rpc()
-    ),
+      )
+        .accounts({
+          journalAccount: entry_account,
+          signer: provider.wallet.publicKey, // not publicKey from useWallet
+          systemProgram: anchor.web3.SystemProgram.programId, // FIXED
+        })
+        .rpc(),
+
 
     onError: (err) => {
       toast.error(err.toString());
+      console.log(programId);
     },
     onSuccess: async (signature) => {
       transactionToast(signature)
-      await getJournalAccounts.refetch()
+      // await getJournalAccounts.refetch()
     },
   })
 

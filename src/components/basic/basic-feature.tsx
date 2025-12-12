@@ -19,7 +19,7 @@ interface EntryFormData {
 
 export default function BasicFeature() {
   const { publicKey } = useWallet()
-  const { programId ,createEntry} = useBasicProgram()
+  const { programId, createEntry } = useBasicProgram()
 
   const [Url, setUrl] = useState('');
 
@@ -48,28 +48,29 @@ export default function BasicFeature() {
   }
 
   const handleSubmit = (e: React.FormEvent) => {
+    console.log(programId.toBase58());
     e.preventDefault()
     if (!publicKey) return;
     const time = Math.floor(
       new Date(Date.now()).getTime() / 1000
     )
 
-    const journal_account = PublicKey.findProgramAddressSync(
+    const entry_account = PublicKey.findProgramAddressSync(
       [
         Buffer.from("ENTRY_STATE"),
         Buffer.from(formData.title.trim()),
         publicKey.toBuffer()
       ],
       programId
-    )[0];
+    )[0]
 
     createEntry.mutateAsync({
-      title:formData.title,
-      entry:formData.entry,
-      imageUrl:"",
-      entry_account:journal_account
+      title: formData.title.trim(),
+      entry: formData.entry.trim(),
+      imageUrl: "".trim(),
+      entry_account: entry_account
     })
-    
+
 
     console.log(formData.entry, formData.title);
   }

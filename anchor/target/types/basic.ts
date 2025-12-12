@@ -14,16 +14,16 @@ export type Basic = {
   },
   "instructions": [
     {
-      "name": "closeEvent",
+      "name": "closeEntry",
       "discriminator": [
-        117,
-        114,
-        193,
-        54,
-        49,
-        25,
-        75,
-        194
+        166,
+        2,
+        133,
+        255,
+        17,
+        144,
+        243,
+        204
       ],
       "accounts": [
         {
@@ -146,16 +146,16 @@ export type Basic = {
       ]
     },
     {
-      "name": "editEvent",
+      "name": "editEntry",
       "discriminator": [
-        175,
-        88,
-        87,
-        49,
-        41,
-        144,
-        33,
-        42
+        81,
+        56,
+        216,
+        236,
+        68,
+        18,
+        64,
+        187
       ],
       "accounts": [
         {

@@ -1,7 +1,7 @@
 import * as anchor from '@coral-xyz/anchor'
 import { Program } from '@coral-xyz/anchor'
-import { Basic } from '../target/types/basic'
 import { PublicKey } from '@solana/web3.js'
+import { Basic } from '../target/types/basic'
 describe('basic', () => {
   // Configure the client to use the local cluster.
   anchor.setProvider(anchor.AnchorProvider.env())
@@ -39,6 +39,10 @@ describe('basic', () => {
 
     const acc = await program.account.journalEntry.fetch(add)
     console.log(acc)
-    
+
+    const tx2 = program.methods.closeEvent().accounts({
+
+    });
+
   })
 })
