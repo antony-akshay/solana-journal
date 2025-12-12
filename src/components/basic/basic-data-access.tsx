@@ -10,12 +10,12 @@ import { useAnchorProvider } from '../solana/solana-provider'
 import { useTransactionToast } from '../use-transaction-toast'
 import * as anchor from "@coral-xyz/anchor"
 import { toast } from 'sonner'
-import { program } from '@coral-xyz/anchor/dist/cjs/native/system'
 
 interface createEntryArgs {
   title: string,
   entry: string,
-  imageUrl: string
+  imageUrl: string,
+  entry_account: PublicKey
 }
 
 export function useBasicProgram() {
@@ -56,7 +56,7 @@ export function useBasicProgram() {
 
   const createEntry = useMutation<string, Error, createEntryArgs>({
     mutationKey: ['create', 'entry', { cluster }],
-    mutationFn: ({ title, entry, imageUrl }) => (
+    mutationFn: ({ title, entry, imageUrl, entry_account }) => (
       program.methods.createEntry(
         title,
         entry,
@@ -64,7 +64,9 @@ export function useBasicProgram() {
           new Date(Date.now()).getTime() / 1000
         )),
         imageUrl
-      ).accounts({}).rpc()
+      ).accounts({
+        journalAccount: entry_account
+      }).rpc()
     ),
 
     onError: (err) => {

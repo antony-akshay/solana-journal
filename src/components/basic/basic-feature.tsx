@@ -9,6 +9,7 @@ import { AppHero } from '../app-hero'
 import { ellipsify } from '@/lib/utils'
 import { ChangeEvent, useState } from 'react'
 import Upload from './upload'
+import { PublicKey } from '@solana/web3.js'
 
 interface EntryFormData {
   title: string,
@@ -53,10 +54,20 @@ export default function BasicFeature() {
       new Date(Date.now()).getTime() / 1000
     )
 
+    const journal_account = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("ENTRY_STATE"),
+        Buffer.from(formData.title.trim()),
+        publicKey.toBuffer()
+      ],
+      programId
+    )[0];
+
     createEntry.mutateAsync({
       title:formData.title,
       entry:formData.entry,
       imageUrl:"",
+      entry_account:journal_account
     })
     
 
