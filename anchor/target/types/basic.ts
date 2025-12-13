@@ -69,7 +69,12 @@ export type Basic = {
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "title",
+          "type": "string"
+        }
+      ]
     },
     {
       "name": "createEntry",

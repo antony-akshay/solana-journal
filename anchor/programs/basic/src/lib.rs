@@ -26,7 +26,7 @@ pub mod basic {
         Ok(())
     }
 
-    pub fn closeEntry(ctx:Context<CloseEntry>)->Result<()> {
+    pub fn closeEntry(ctx:Context<CloseEntry>,title:String)->Result<()> {
         Ok(())
     }
 }
