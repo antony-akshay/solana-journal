@@ -18,6 +18,11 @@ interface createEntryArgs {
   entry_account: PublicKey
 }
 
+interface deleteEntryArgs {
+  title:string,
+  entry_account: PublicKey
+}
+
 export function useBasicProgram() {
   const { connection } = useConnection()
   const { cluster } = useCluster()
@@ -77,8 +82,30 @@ export function useBasicProgram() {
     },
     onSuccess: async (signature) => {
       transactionToast(signature)
-      // await getJournalAccounts.refetch()
+      await getJournalAccounts.refetch()
     },
+  })
+
+  const deleteEntry = useMutation<string, Error, deleteEntryArgs>({
+    mutationKey: ['delete', 'entry', { cluster }],
+    mutationFn: async ({ entry_account,title }) =>
+      await program.methods.closeEntry(title)
+        .accounts({
+          journalAccount: entry_account,
+          signer: provider.wallet.publicKey, // not publicKey from useWallet
+          systemProgram: anchor.web3.SystemProgram.programId, // FIXED
+        })
+        .rpc(),
+
+    onError: (err) => {
+      toast.error(err.toString());
+    },
+
+    onSuccess: async (signature) => {
+      transactionToast(signature),
+        await getJournalAccounts.refetch()
+    }
+
   })
 
 
@@ -87,6 +114,7 @@ export function useBasicProgram() {
     programId,
     getProgramAccount,
     getJournalAccounts,
-    createEntry
+    createEntry,
+    deleteEntry
   }
 }

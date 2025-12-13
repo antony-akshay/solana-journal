@@ -1,15 +1,12 @@
 'use client'
 
 import { useWallet } from '@solana/wallet-adapter-react'
-import { ExplorerLink } from '../cluster/cluster-ui'
+import { PublicKey } from '@solana/web3.js'
+import { ChangeEvent, useState } from 'react'
 import { WalletButton } from '../solana/solana-provider'
 import { useBasicProgram } from './basic-data-access'
-import { BasicCreate } from './basic-ui'
-import { AppHero } from '../app-hero'
-import { ellipsify } from '@/lib/utils'
-import { ChangeEvent, useState } from 'react'
 import Upload from './upload'
-import { PublicKey } from '@solana/web3.js'
+import { Button } from '../ui/button'
 
 interface EntryFormData {
   title: string,
@@ -19,7 +16,8 @@ interface EntryFormData {
 
 export default function BasicFeature() {
   const { publicKey } = useWallet()
-  const { programId, createEntry } = useBasicProgram()
+  const { programId, createEntry, getJournalAccounts, deleteEntry } = useBasicProgram()
+  const entries = getJournalAccounts.data
 
   const [Url, setUrl] = useState('');
 
@@ -75,6 +73,13 @@ export default function BasicFeature() {
     console.log(formData.entry, formData.title);
   }
 
+  const handleDelete = (entry_account: PublicKey,title:string) => {
+    deleteEntry.mutateAsync({
+      entry_account,
+      title
+    })
+  }
+
   return publicKey ? (
     <div>
       <form className='flex flex-col items-center my-5'>
@@ -103,6 +108,17 @@ export default function BasicFeature() {
           click me!
         </button>
       </form>
+      <div>
+        {entries?.map((entry) => {
+          return (
+            <div key={entry.publicKey.toString()} className='flex flex-col mt-5 border w-1/4 p-4 rounded-3xl bg-green-500 text-white font-extrabold '>
+              <h1>{entry.account.title}</h1>
+              <p>{entry.account.content}</p>
+              <Button className='items-end mt-3' onClick={() => handleDelete(entry.publicKey,entry.account.title)}>delete</Button>
+            </div>
+          )
+        })}
+      </div>
     </div>
   ) : (
     <div className="max-w-4xl mx-auto">
