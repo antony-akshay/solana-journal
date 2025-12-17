@@ -1,15 +1,15 @@
 'use client'
 
+import * as anchor from "@coral-xyz/anchor"
 import { getBasicProgram, getBasicProgramId } from '@project/anchor'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { Cluster, PublicKey } from '@solana/web3.js'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useMemo } from 'react'
+import { toast } from 'sonner'
 import { useCluster } from '../cluster/cluster-data-access'
 import { useAnchorProvider } from '../solana/solana-provider'
 import { useTransactionToast } from '../use-transaction-toast'
-import * as anchor from "@coral-xyz/anchor"
-import { toast } from 'sonner'
 
 interface createEntryArgs {
   title: string,
@@ -19,7 +19,7 @@ interface createEntryArgs {
 }
 
 interface deleteEntryArgs {
-  title:string,
+  title: string,
   entry_account: PublicKey
 }
 
@@ -62,12 +62,12 @@ export function useBasicProgram() {
   const createEntry = useMutation<string, Error, createEntryArgs>({
     mutationKey: ['create', 'entry', { cluster }],
     mutationFn: async ({ title, entry, imageUrl, entry_account }) =>
-      await program.methods.createEntry(
+      await (program.methods.createEntry(
         title,
         entry,
         new anchor.BN(Math.floor(Date.now() / 1000)),
         imageUrl
-      )
+      ) as any)
         .accounts({
           journalAccount: entry_account,
           signer: provider.wallet.publicKey, // not publicKey from useWallet
@@ -88,8 +88,8 @@ export function useBasicProgram() {
 
   const deleteEntry = useMutation<string, Error, deleteEntryArgs>({
     mutationKey: ['delete', 'entry', { cluster }],
-    mutationFn: async ({ entry_account,title }) =>
-      await program.methods.closeEntry(title)
+    mutationFn: async ({ entry_account, title }) =>
+      await (program.methods.closeEntry(title) as any)
         .accounts({
           journalAccount: entry_account,
           signer: provider.wallet.publicKey, // not publicKey from useWallet
